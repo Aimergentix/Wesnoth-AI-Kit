@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Wesnoth AI Kit Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kit_version",
+    "repository_mode",
+    "target_branch",
+    "source_version",
+    "validation_entrypoint",
+    "canonical_file",
+    "campaigns_file",
+    "installed_files",
+    "generated_outputs",
+    "allowed_citation_domains",
+    "marker_scan_excludes",
+    "citation_scan_excludes",
+    "tracked_directories"
+  ],
+  "properties": {
+    "kit_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "repository_mode": {
+      "type": "string",
+      "enum": ["documentation-only"]
+    },
+    "target_branch": {
+      "type": "string",
+      "pattern": "^1\\.19\\.x$"
+    },
+    "source_version": {
+      "type": "string",
+      "pattern": "^1\\.19\\.[0-9]+$"
+    },
+    "validation_entrypoint": {
+      "type": "string",
+      "minLength": 1
+    },
+    "canonical_file": {
+      "type": "string",
+      "minLength": 1
+    },
+    "campaigns_file": {
+      "type": "string",
+      "minLength": 1
+    },
+    "installed_files": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "generated_outputs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "allowed_citation_domains": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "marker_scan_excludes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "citation_scan_excludes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "tracked_directories": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true,
+      "minItems": 1
+    }
+  }
+}

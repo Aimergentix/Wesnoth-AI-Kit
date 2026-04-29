@@ -1,0 +1,15 @@
+---
+description: File conventions for Wesnoth WML and Lua
+globs: **/*.{cfg,lua,pbl}
+alwaysApply: false
+---
+
+# WML and Lua File Conventions
+
+- Keep examples syntactically valid for `1.19.x`.
+- Write generated pipeline files under `docs/wesnoth/generated/`.
+- Add version requirements to new examples:
+  - WML files: `# Requires: 1.19.X+`
+  - Lua files: `-- Requires: 1.19.X+`
+- Prefer explicit migration-safe edits over broad refactors.
+- When replacing deprecated patterns, include the modern equivalent in comments or notes.

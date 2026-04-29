@@ -1,0 +1,13 @@
+---
+description: Core Wesnoth 1.19 WML/Lua constraints
+alwaysApply: true
+---
+
+# Wesnoth 1.19 Core Rules
+
+- Target the `1.19.x` development branch unless the user states otherwise.
+- Never conflate `1.18.x` stable behavior with `1.19.x`.
+- Use `docs/wesnoth/WML_1.19_CANONICAL.md` as the first reference.
+- Place generated task documents in `docs/wesnoth/generated/`.
+- If a tag/function/property is uncertain, label it `[UNVERIFIED]` instead of guessing.
+- Avoid introducing fictional WML tags, Lua API calls, or WFL properties.

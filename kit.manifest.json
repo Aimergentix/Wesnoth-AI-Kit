@@ -1,0 +1,51 @@
+{
+  "kit_version": "1.1.0",
+  "repository_mode": "documentation-only",
+  "target_branch": "1.19.x",
+  "source_version": "1.19.23",
+  "validation_entrypoint": "bash scripts/validate-docs.sh",
+  "canonical_file": "docs/wesnoth/WML_1.19_CANONICAL.md",
+  "campaigns_file": "docs/wesnoth/Campaigns_1.19.md",
+  "installed_files": [
+    "AGENTS.md",
+    "CHANGELOG.md",
+    "CLAUDE.md",
+    "CONTRIBUTING.md",
+    "GEMINI.md",
+    "LICENSE",
+    "README.md",
+    "kit.manifest.json",
+    "kit.manifest.schema.json",
+    "scripts/test-validate-docs-regressions.sh",
+    "scripts/validate-docs.sh",
+    "scripts/fixtures/validate-docs/broken-canonical-file/manifest.patch.json",
+    "scripts/fixtures/validate-docs/undeclared-root-file/overlay/UNDECLARED_ROOT.txt",
+    ".cursor/rules/wesnoth-1-19-core.mdc",
+    ".cursor/rules/wesnoth-file-conventions.mdc",
+    ".github/copilot-instructions.md",
+    ".github/workflows/validate-docs.yml",
+    "docs/wesnoth/WML_1.19_CANONICAL.md",
+    "docs/wesnoth/Campaigns_1.19.md",
+    "docs/wesnoth/EVIDENCE_ANCHORS.md"
+  ],
+  "generated_outputs": [
+    "docs/wesnoth/generated/01_lua_api_changes_1.19.md",
+    "docs/wesnoth/generated/02_wml_engine_changes_1.19.md",
+    "docs/wesnoth/generated/03_wfl_changes_1.19.md",
+    "docs/wesnoth/generated/04_best_practices_1.19.md",
+    "docs/wesnoth/generated/05_mp_campaigns_analysis.md"
+  ],
+  "tracked_directories": [
+    "docs",
+    "scripts",
+    ".cursor",
+    ".github"
+  ],
+  "allowed_citation_domains": [
+    "github.com/wesnoth",
+    "raw.githubusercontent.com/wesnoth",
+    "wiki.wesnoth.org"
+  ],
+  "marker_scan_excludes": [],
+  "citation_scan_excludes": []
+}
