@@ -39,9 +39,27 @@ explicitly requested.
   newer version, do not bypass the gate.
 - Every distinct `wiki:` and `changelog:` anchor in a generated file needs
   a companion HTTPS URL in that file or in `docs/wesnoth/Campaigns_1.19.md`.
-- Two narrow escape hatches exist (`marker_scan_excludes`,
-  `citation_scan_excludes`); use only when the file legitimately quotes
-  markers or cites outside the allowlist. Document the reason in the PR.
+  `wiki:` anchors require a URL containing `wiki.wesnoth.org/<Page>`;
+  `changelog:` anchors only require any URL containing `changelog`
+  (upstream ships a single `changelog.md`, so per-version pairing is not
+  enforced).
+- Two narrow escape hatches:
+  - `marker_scan_excludes` exempts named `.md` files under
+    `docs/wesnoth/generated/` from the marker-token scan.
+  - `citation_scan_excludes` exempts named text files (anywhere in the
+    repo) from the URL allowlist scan.
+  Use only when a file legitimately quotes markers or cites outside the
+  allowlist (test fixtures, etc.). Document the reason in the PR.
+
+The citation scan is intentionally repo-wide rather than scoped to
+`installed_files` / `generated_outputs`, so stray drafts dropped into the
+tree are caught before they're declared.
+
+The freshness gate derives its version prefix from `as_of_changelog` at
+runtime, so renaming the kit's target line (e.g. to `1.20.x`) requires
+bumping `as_of_changelog` *and* the regex patterns for `target_branch` and
+`as_of_changelog` in `kit.manifest.schema.json` together — they are
+coupled by convention, not by validator logic.
 
 ## Uncertainty handling
 

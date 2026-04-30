@@ -36,7 +36,16 @@ root = pathlib.Path(sys.argv[1])
 patch = json.loads(pathlib.Path(sys.argv[2]).read_text(encoding="utf-8"))
 manifest_path = root / "kit.manifest.json"
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-manifest.update(patch)
+# List-valued keys merge (deduped, order preserved); scalar keys replace.
+for key, value in patch.items():
+    if isinstance(value, list) and isinstance(manifest.get(key), list):
+        merged = list(manifest[key])
+        for item in value:
+            if item not in merged:
+                merged.append(item)
+        manifest[key] = merged
+    else:
+        manifest[key] = value
 manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 PY
 }
@@ -51,6 +60,7 @@ run_case() {
 
     mkdir -p "$sandbox"
     cp -a "$repo_root"/. "$sandbox"/
+    rm -rf "$sandbox/.git"
 
     if [[ -f "$fixture_dir/manifest.patch.json" ]]; then
         apply_manifest_patch "$sandbox" "$fixture_dir/manifest.patch.json"
@@ -81,6 +91,33 @@ run_case() {
     pass "$case_name fails with the expected diagnostic"
 }
 
+run_pass_case() {
+    local case_name="$1"
+    local fixture_dir="$fixtures_root/$case_name"
+    local sandbox="$scratch_root/$case_name"
+    local output_file="$scratch_root/$case_name.out"
+
+    mkdir -p "$sandbox"
+    cp -a "$repo_root"/. "$sandbox"/
+    rm -rf "$sandbox/.git"
+
+    if [[ -f "$fixture_dir/manifest.patch.json" ]]; then
+        apply_manifest_patch "$sandbox" "$fixture_dir/manifest.patch.json"
+    fi
+
+    if [[ -d "$fixture_dir/overlay" ]]; then
+        cp -a "$fixture_dir/overlay"/. "$sandbox"/
+    fi
+
+    if ! (cd "$sandbox" && bash scripts/validate-docs.sh >"$output_file" 2>&1); then
+        printf 'FAIL: %s unexpectedly failed\n' "$case_name"
+        cat "$output_file"
+        exit 1
+    fi
+
+    pass "$case_name passes with the expected exemption"
+}
+
 run_case \
     "broken-canonical-file" \
     "FAIL: manifest contract paths drifted" \
@@ -95,5 +132,8 @@ run_case \
     "changelog-exceeds-ceiling" \
     "FAIL: changelog anchors exceed as_of_changelog ceiling" \
     "exceeds as_of_changelog=1.19.10"
+
+run_pass_case "marker-exclude-passes"
+run_pass_case "citation-exclude-passes"
 
 printf 'Negative regression harness completed successfully.\n'

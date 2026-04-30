@@ -1,0 +1,4 @@
+{
+  "installed_files": ["_test_citation_excluded.txt"],
+  "citation_scan_excludes": ["_test_citation_excluded.txt"]
+}

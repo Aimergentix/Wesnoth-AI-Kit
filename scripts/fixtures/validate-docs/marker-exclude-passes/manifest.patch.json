@@ -1,0 +1,4 @@
+{
+  "generated_outputs": ["docs/wesnoth/generated/_test_marker_excluded.md"],
+  "marker_scan_excludes": ["docs/wesnoth/generated/_test_marker_excluded.md"]
+}

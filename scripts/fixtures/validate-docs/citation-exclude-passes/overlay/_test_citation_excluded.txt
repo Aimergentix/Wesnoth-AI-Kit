@@ -1,0 +1,3 @@
+Citation-exclude fixture: this file intentionally cites a disallowed
+domain (https://example.com/disallowed) to verify that
+citation_scan_excludes exempts named text files from the URL allowlist.

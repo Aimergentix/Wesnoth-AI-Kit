@@ -20,6 +20,10 @@
     "scripts/validate-docs.sh",
     "scripts/fixtures/validate-docs/broken-canonical-file/manifest.patch.json",
     "scripts/fixtures/validate-docs/changelog-exceeds-ceiling/manifest.patch.json",
+    "scripts/fixtures/validate-docs/citation-exclude-passes/manifest.patch.json",
+    "scripts/fixtures/validate-docs/citation-exclude-passes/overlay/_test_citation_excluded.txt",
+    "scripts/fixtures/validate-docs/marker-exclude-passes/manifest.patch.json",
+    "scripts/fixtures/validate-docs/marker-exclude-passes/overlay/docs/wesnoth/generated/_test_marker_excluded.md",
     "scripts/fixtures/validate-docs/undeclared-root-file/overlay/UNDECLARED_ROOT.txt",
     ".cursor/rules/wesnoth-1-19-core.mdc",
     ".cursor/rules/wesnoth-file-conventions.mdc",
@@ -48,5 +52,7 @@
     "wiki.wesnoth.org"
   ],
   "marker_scan_excludes": [],
-  "citation_scan_excludes": []
+  "citation_scan_excludes": [
+    "scripts/fixtures/validate-docs/citation-exclude-passes/overlay/_test_citation_excluded.txt"
+  ]
 }

@@ -358,15 +358,18 @@ fi
 
 # Evidence-anchor schema check on generated outputs.
 if anchor_violations="$(python3 - "$repo_root" <<'PY'
+import json
 import pathlib
 import re
 import sys
 
 root = pathlib.Path(sys.argv[1])
+manifest = json.loads((root / "kit.manifest.json").read_text(encoding="utf-8"))
+version_prefix = manifest["as_of_changelog"].rsplit(".", 1)[0]
 generated_dir = root / "docs" / "wesnoth" / "generated"
 anchor_pattern = re.compile(r"VERIFIED\(([^)]*)\)")
 source_pattern = re.compile(
-    r"^(canonical|changelog:1\.19\.(0|[1-9][0-9]*)|wiki:[A-Za-z0-9_.]+(#[A-Za-z0-9_.\-]+)?)$"
+    rf"^(canonical|changelog:{re.escape(version_prefix)}\.(0|[1-9][0-9]*)|wiki:[A-Za-z0-9_.]+(#[A-Za-z0-9_.\-]+)?)$"
 )
 violations = []
 
@@ -403,9 +406,12 @@ import sys
 root = pathlib.Path(sys.argv[1])
 manifest = json.loads((root / "kit.manifest.json").read_text(encoding="utf-8"))
 ceiling = manifest["as_of_changelog"]
-ceiling_patch = int(ceiling.rsplit(".", 1)[1])
+version_prefix, ceiling_patch_str = ceiling.rsplit(".", 1)
+ceiling_patch = int(ceiling_patch_str)
 generated_dir = root / "docs" / "wesnoth" / "generated"
-anchor_pattern = re.compile(r"VERIFIED\(changelog:1\.19\.(0|[1-9][0-9]*)\)")
+anchor_pattern = re.compile(
+    rf"VERIFIED\(changelog:{re.escape(version_prefix)}\.(0|[1-9][0-9]*)\)"
+)
 violations = []
 
 if generated_dir.is_dir():
@@ -420,7 +426,7 @@ if generated_dir.is_dir():
                 patch = int(match.group(1))
                 if patch > ceiling_patch:
                     violations.append(
-                        f"{rel}:{line_number}: changelog:1.19.{patch} exceeds as_of_changelog={ceiling}"
+                        f"{rel}:{line_number}: changelog:{version_prefix}.{patch} exceeds as_of_changelog={ceiling}"
                     )
 
 if violations:
