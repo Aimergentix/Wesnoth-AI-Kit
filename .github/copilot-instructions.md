@@ -1,5 +1,5 @@
-# Copilot Instructions: Wesnoth 1.19.x (WML/Lua)
+# Copilot Instructions: Wesnoth AI Kit (1.19.x)
 
 See [AGENTS.md](../AGENTS.md) for the canonical rule set used by all agents
-in this repository (target branch, source-of-truth files, WML/Lua
-conventions, and change-safety rules).
+in this repository (repository kind, source-of-truth files, manifest
+contract, WML/Lua example conventions, and change-safety rules).

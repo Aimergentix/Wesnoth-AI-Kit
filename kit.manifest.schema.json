@@ -7,7 +7,7 @@
     "kit_version",
     "repository_mode",
     "target_branch",
-    "source_version",
+    "as_of_changelog",
     "validation_entrypoint",
     "canonical_file",
     "campaigns_file",
@@ -31,9 +31,9 @@
       "type": "string",
       "pattern": "^1\\.19\\.x$"
     },
-    "source_version": {
+    "as_of_changelog": {
       "type": "string",
-      "pattern": "^1\\.19\\.[0-9]+$"
+      "pattern": "^1\\.19\\.(0|[1-9][0-9]*)$"
     },
     "validation_entrypoint": {
       "type": "string",

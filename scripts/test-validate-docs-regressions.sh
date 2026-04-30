@@ -88,7 +88,12 @@ run_case \
 
 run_case \
     "undeclared-root-file" \
-    "FAIL: orphan files found in repo root or tracked directories (add to manifest)" \
+    "FAIL: orphan files found in repo root or tracked directories (add to installed_files or generated_outputs in kit.manifest.json)" \
     "UNDECLARED_ROOT.txt"
+
+run_case \
+    "changelog-exceeds-ceiling" \
+    "FAIL: changelog anchors exceed as_of_changelog ceiling" \
+    "exceeds as_of_changelog=1.19.10"
 
 printf 'Negative regression harness completed successfully.\n'

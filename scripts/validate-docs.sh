@@ -252,7 +252,7 @@ PY
 )"; then
     pass "no orphan files in repo root or tracked directories"
 else
-    fail_with_output "orphan files found in repo root or tracked directories (add to manifest)" "$orphan_paths"
+    fail_with_output "orphan files found in repo root or tracked directories (add to installed_files or generated_outputs in kit.manifest.json)" "$orphan_paths"
 fi
 
 # Marker-token cleanliness in generated outputs (respecting excludes).
@@ -393,8 +393,8 @@ else
     fail_with_output "evidence anchors violate schema (see docs/wesnoth/EVIDENCE_ANCHORS.md)" "$anchor_violations"
 fi
 
-# Stale validation-command references (manifest-driven scan over text files).
-if stale_validation_hits="$(python3 - "$repo_root" <<'PY'
+# Anchor freshness: no changelog:1.19.<m> anchor may exceed manifest.as_of_changelog.
+if freshness_violations="$(python3 - "$repo_root" <<'PY'
 import json
 import pathlib
 import re
@@ -402,37 +402,35 @@ import sys
 
 root = pathlib.Path(sys.argv[1])
 manifest = json.loads((root / "kit.manifest.json").read_text(encoding="utf-8"))
-text_suffixes = {".md", ".cfg", ".lua", ".mdc", ".txt", ".yml", ".yaml"}
-pattern = re.compile(r"make check|make test-install|make dry-run|validate-kit\.sh")
-hits = []
+ceiling = manifest["as_of_changelog"]
+ceiling_patch = int(ceiling.rsplit(".", 1)[1])
+generated_dir = root / "docs" / "wesnoth" / "generated"
+anchor_pattern = re.compile(r"VERIFIED\(changelog:1\.19\.(0|[1-9][0-9]*)\)")
+violations = []
 
-declared = list(manifest.get("installed_files", [])) + list(manifest.get("generated_outputs", []))
-seen = set()
-for rel in declared:
-    if rel in seen:
-        continue
-    seen.add(rel)
-    path = root / rel
-    if not path.is_file():
-        continue
-    if path.suffix.lower() not in text_suffixes:
-        continue
-    try:
-        text = path.read_text(encoding="utf-8")
-    except UnicodeDecodeError:
-        continue
-    for line_number, line in enumerate(text.splitlines(), start=1):
-        if pattern.search(line):
-            hits.append(f"{rel}:{line_number}: {line.strip()}")
+if generated_dir.is_dir():
+    for path in sorted(generated_dir.rglob("*.md")):
+        rel = path.relative_to(root).as_posix()
+        try:
+            text = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+        for line_number, line in enumerate(text.splitlines(), start=1):
+            for match in anchor_pattern.finditer(line):
+                patch = int(match.group(1))
+                if patch > ceiling_patch:
+                    violations.append(
+                        f"{rel}:{line_number}: changelog:1.19.{patch} exceeds as_of_changelog={ceiling}"
+                    )
 
-if hits:
-    print("\n".join(hits))
+if violations:
+    print("\n".join(violations))
     sys.exit(1)
 PY
 )"; then
-    pass "no stale validation-command references remain"
+    pass "no changelog anchors exceed as_of_changelog ceiling"
 else
-    fail_with_output "stale validation-command references found" "$stale_validation_hits"
+    fail_with_output "changelog anchors exceed as_of_changelog ceiling (raise the manifest field or correct the anchor)" "$freshness_violations"
 fi
 
 # Companion-citation enforcement: every distinct wiki: / changelog: anchor used in a

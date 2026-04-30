@@ -37,7 +37,6 @@ The validator currently checks:
 - generated outputs are marker-token clean (`[UNVERIFIED]`, `[NEEDS REVIEW]`)
 - citation URLs use only the allowed canonical domains in `kit.manifest.json`
 - evidence anchors conform to the grammar in `docs/wesnoth/EVIDENCE_ANCHORS.md`
-- no stale references to nonexistent validation commands remain
 
 The regression harness intentionally mutates a temporary checkout to verify that
 `scripts/validate-docs.sh` rejects a broken `canonical_file` pointer and an
